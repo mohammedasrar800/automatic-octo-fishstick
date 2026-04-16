@@ -1,0 +1,331 @@
+16 bit addition 
+code segment
+assume cs:code
+start:
+
+mov ax, 0000h
+mov bx, ax
+mov dx, ax
+
+mov si, 3000h
+mov ax, [si]
+inc si
+inc si
+
+mov bx, [si]
+inc si
+inc si
+
+add ax, bx
+mov [si], ax
+
+jc l1
+inc si
+inc si
+mov [si], dx
+int 3
+
+l1: inc dx
+    inc si
+    inc si
+    mov [si], dx
+    int 3
+
+code ends
+end start
+
+2)16 bit multiplication
+
+code segment
+assume cs:code
+start:
+
+mov si, 7021h
+mov ax, [si]
+add si, 02h
+
+mov bx, [si]
+mul bx
+
+add si, 02h
+mov [si], ax
+
+add si, 02h
+mov [si], dx
+
+int 3
+
+code ends
+end start
+
+3) 8 bit multiplication 
+
+code segment
+assume cs:code
+start:
+
+mov si, 7000h
+mov al, [si]
+inc si
+
+mov bl, [si]
+mul bl
+
+inc si
+mov [si], ax
+
+int 3
+
+code ends
+end start
+
+4)finding smallest 
+code segment
+assume cs:code
+start:
+
+    mov ax,0000h
+    mov bl, al
+    mov cl, al
+    mov si,1000h
+    mov bl,[si]
+    dec bl
+    mov cl,bl
+    mov si,2000h
+
+l2: mov al,[si]
+    cmp al,[si+1]
+    jge l1
+    xchg al,[si+1]
+    mov [si],al
+
+l1: inc si
+    loop l2
+    int 3
+
+code ends
+
+5)greatest number
+
+code segment
+assume cs:code
+start:
+
+    mov ax,0000h
+    mov bl, al
+    mov cl, al
+    mov si,1000h
+    mov bl,[si]
+    dec bl
+    mov cl,bl
+    mov si,2000h
+
+l2: mov al,[si]
+    cmp al,[si+1]
+    jle l1
+    xchg al,[si+1]
+    mov [si],al
+
+l1: inc si
+    loop l2
+    int 3
+
+code ends
+
+6) descending order 
+
+code segment
+assume cs:code
+
+start:
+mov ch,09h
+
+back2:
+mov si,2000h
+mov cl,09h
+
+back1:
+mov al,[si]
+mov ah,[si+1]
+cmp al,ah
+
+jbe skip
+mov [si+1],al
+mov [si],ah
+
+skip:
+inc si
+dec cl
+jnz back1
+
+dec ch
+jnz back2
+
+int 3
+
+code ends
+end start
+
+7) ascending order 
+
+code segment
+assume cs:code
+
+start:
+mov ch,09h
+
+back2:
+mov si,2000h
+mov cl,09h
+
+back1:
+mov al,[si]
+mov ah,[si+1]
+cmp al,ah
+
+jae skip
+mov [si+1],al
+mov [si],ah
+
+skip:
+inc si
+dec cl
+jnz back1
+
+dec ch
+jnz back2
+
+int 3
+
+code ends
+end start
+
+8) O's and 1's
+
+code segment
+assume cs:code
+start:
+
+mov si,2000h
+mov al,[si]
+mov cl,08h
+mov bl,00h
+mov bh,00h
+
+back:
+ror al,1
+jc one
+inc bh
+jmp next
+
+one:
+inc bl
+
+next:
+dec cl
+jnz back
+
+mov di,3000h
+mov [di],bx
+
+int 3
+
+code ends
+end start
+
+9) odd or even
+code segment
+assume cs:code
+start:
+
+mov si,2000h
+mov cx,0005h
+mov bl,00h
+mov bh,00h
+
+back:
+mov al,[si]
+ror al,1
+jc odd
+inc bl
+jmp next
+
+odd:
+inc bh
+
+next:
+inc si
+loop back
+
+mov di,3000h
+mov [di],bx
+
+int 3
+
+code ends
+end start
+
+10) Fibonacci
+
+code segment
+assume cs:code
+start:
+
+mov si,2000h
+mov cx,000ah
+mov al,00h
+mov bl,01h
+
+mov [si],al
+inc si
+mov [si],bl
+inc si
+
+sub cx,0002h
+
+back:
+mov dl,al
+add dl,bl
+mov [si],dl
+inc si
+mov al,bl
+mov bl,dl
+
+loop back
+
+int 3
+
+code ends
+end start
+
+11) print string
+
+data segment
+msg1 db 'VELLORE INSTITUTE OF TECHNOLOGY'
+data ends
+
+code segment
+assume cs:code, ds:data
+
+start:
+    mov ax,data
+    mov ds,ax
+    mov sp,0D000h
+
+    lea bx,msg1
+    mov cx,21h
+
+printmsg:
+    mov dl,[bx]
+    mov ah,02h
+    int 21h
+
+    inc bx
+    dec cx
+    jnz printmsg
+
+    mov ah,4Ch
+    int 21h
+
+code ends
+end start
